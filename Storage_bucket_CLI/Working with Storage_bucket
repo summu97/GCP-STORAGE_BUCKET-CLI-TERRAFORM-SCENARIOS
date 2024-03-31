@@ -1,1 +1,78 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+To list all the buckets in a Project:
+gsutil ls -p PROJECT_ID
+(gsutil ls -p ringed-hallway-417305)
+
+*List Contents of a Bucket:
+gsutil ls gs://BUCKET_NAME
+
+*Copying file from local to bucket:
+gsutil cp LOCAL_FILE_PATH gs://BUCKET_NAME
+
+*Copying file from bucket to local:
+gsutil cp gs://SOURCE_BUCKET_NAME/OBJECT_NAME  DESTINATION
+
+*Moving Files within or between Buckets:
+gsutil mv gs://SOURCE_BUCKET_NAME/OBJECT_NAME gs://DESTINATION_BUCKET_NAME/OBJECT_NAME
+(gsutil cp gs://adq-bucket-dev-getteam/file1 gs://adq-bucket-test-getteam/)
+
+*Deleting a File or Object:
+gsutil rm gs://BUCKET_NAME/OBJECT_NAME
+(gsutil rm gs://adq-bucket-test-getteam/file1)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Copying folder from local to bucket:
+gsutil -m cp -r my-folder/* gs://my-bucket/
+(gsutil -m cp -r ./folder1/* gs://adq-bucket-dev-getteam/)
+
+*Copying folder from bucket to local:
+gsutil cp -r gs://source-bucket/* DESTINATION/PATH
+(gsutil cp -r gs://adq-bucket-dev-getteam/* .)
+
+*Copying folder from bucket to bucket:
+gsutil -m cp -r gs://source-bucket/folder1/* gs://destination-bucket/folder1/
+(gsutil cp -r gs://adq-bucket-dev-getteam/* gs://adq-bucket-test-getteam/)
+
+*Deleting folder from bucket:
+gsutil -m rm -r gs://my-bucket/my-folder/
+(gsutil rm -r gs://adq-bucket-test-getteam/folder4)
+
+NOTE:
+-m = This flag enables multithreaded/multiprocessing transfers, which can significantly speed up the transfer process for multiple files.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Setting Access Control Lists (ACLs): To set read, write, owner permissions to a user.
+
+gsutil acl ch -u USER:PERMISSION gs://BUCKET_NAME/OBJECT_NAME
+(gsutil acl ch -u user@example.com:READER gs://my-bucket/example.txt)
+
+PERMISSION: (READER, WRITER, OWNER)
+Reader: Can read object data and metadata, list objects, and retrieve object contents.
+Writer: Can do everything a reader can, plus overwrite, delete, and modify object metadata.
+Owner: Can do everything a writer can, plus manage object ACLs, permanently delete the object, and change its storage class.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Syncing Local Directory with Bucket:
+gsutil rsync -r LOCAL_DIR_PATH gs://BUCKET_NAME
+
+When you run this command, gsutil rsync compares the contents of the local directory with the contents of the specified bucket. It then copies any files or directories that are missing from the bucket or that have been modified since the last synchronization. This ensures that the contents of the local directory and the bucket remain in sync.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Getting Information about a Bucket or Object:
+gsutil ls -L gs://BUCKET_NAME
+(gsutil ls -L gs://adq-bucket-dev-getteam/)
+
+
+-L: This flag indicates that additional information, such as object metadata and ACLs, should be included in the output.
+
+When you run this command, gsutil will list the objects within the specified bucket (gs://BUCKET_NAME) along with detailed information for each object. This information typically includes details such as the object's name, size, creation time, storage class, and any associated metadata or ACLs.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Resuming a Failed Upload/Download:
+gsutil rsync -c -r LOCAL_DIR_PATH gs://BUCKET_NAME
+
+-c: This flag tells gsutil to skip files that have the same size and the same object checksum. It's useful for resuming failed operations because it allows gsutil to skip files that have already been successfully uploaded or downloaded.
+
+When you run this command, gsutil rsync will resume the synchronization process from where it left off, skipping files that have already been successfully transferred (based on their size and checksum), and uploading or downloading any remaining files. This allows you to resume a failed upload or download operation without starting from scratch.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
