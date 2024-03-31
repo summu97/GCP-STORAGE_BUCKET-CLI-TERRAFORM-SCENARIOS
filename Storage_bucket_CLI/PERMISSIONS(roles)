@@ -35,6 +35,8 @@ All permissions granted by the Storage Bucket Viewer role.
 All permissions granted by the Storage Bucket Creator role.
 storage.buckets.delete: Allows users to delete buckets.
 -----------------------------------------------------------------------------------------------
+                                                "O-----W-----R"
+
 OWNER: Storage Legacy Bucket Owner (roles/storage.legacyBucketOwner):
 
 Permissions:
