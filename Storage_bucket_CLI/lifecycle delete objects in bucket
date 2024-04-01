@@ -1,5 +1,3 @@
-To delete objects in a bucket for every 7 days:
-
 vim lifecycle.json
 
 {
