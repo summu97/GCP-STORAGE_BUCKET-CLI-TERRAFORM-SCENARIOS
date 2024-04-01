@@ -1,7 +1,7 @@
 To take backup for every 7 days:
 
-vim backup.sh
-
+vim backup.sh ( copy paste below content in file).
+--------------------------------
 #!/bin/bash
 
 # Set variables
@@ -12,7 +12,7 @@ BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
 
 # Copy objects from source bucket to backup bucket
 gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
-
+---------------------------------
 
 * Give permissions to .sh file:
 chmod +x backup.sh
