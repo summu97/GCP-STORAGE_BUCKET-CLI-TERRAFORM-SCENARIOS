@@ -22,7 +22,9 @@ crontab -e
 
 *Adding schedule:
 0 0 */7 * * /path/to/backup.sh
-(
+--------------------------------------------------------------------------------------------
+EXAMPLE:
+
 #!/bin/bash
 
 # Set variables
@@ -33,7 +35,11 @@ BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
 
 # Copy objects from source bucket to backup bucket
 gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
-                                                                      )
+
+chmod +x backup.sh
+crontab -e
+0 0 */7 * * /root/terraform/backup.sh
+
 ---------------------------------------------------------------------------------------------
 * * * * *
 Minute (0-59)
