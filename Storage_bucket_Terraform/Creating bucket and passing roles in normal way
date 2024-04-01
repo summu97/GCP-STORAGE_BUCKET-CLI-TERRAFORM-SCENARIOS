@@ -43,6 +43,13 @@ resource "google_storage_bucket_iam_binding" "my_bucket_creator" {
   members = ["serviceAccount:SVC@example.com"]   
 
 }
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------
 # NOTE: In members "Specify the existing service account email"
 # members = ["user:example@gmail.com"] ; members = ["allUsers"] ; members = ["serviceAccount:SVC@example.com"]
+
+#  members = [
+#    "user:example@example.com",  # Example: user account
+#    "serviceAccount:example@gs-project-accounts.iam.gserviceaccount.com",  # Example: service account
+#    "group:example-group@example.com",  # Example: Google Group
+#    "domain:example.com",  # Example: entire domain
+#  ]
