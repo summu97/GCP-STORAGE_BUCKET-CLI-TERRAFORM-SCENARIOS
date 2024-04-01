@@ -1,0 +1,48 @@
+provider "google" {
+  project = "ringed-hallway-417305"
+  region  = "us-central1"
+}
+
+resource "google_storage_bucket" "my_bucket" {
+  name             = "adq-bucket-dev-getteam"
+  location         = "US"  # Change this to your desired location
+  force_destroy    = true  # Be cautious with this setting, as it will permanently delete all objects in the bucket when the resource is destroyed
+
+  # Enable versioning for the bucket
+  versioning {
+    enabled = true
+  }
+
+  # Optional: Add lifecycle rules for automatic object deletion
+  lifecycle_rule {
+    condition {
+      age = 30
+    }
+
+    action {
+      type = "Delete"
+    }
+  }
+
+  storage_class = "NEARLINE"  # Specify the desired storage class (e.g., STANDARD, NEARLINE, COLDLINE, ARCHIVE)
+}
+
+resource "google_storage_bucket_iam_binding" "my_bucket_iam" {
+  bucket = google_storage_bucket.my_bucket.name
+
+  role    = "roles/storage.objectViewer"  # Specify the desired role (e.g., roles/storage.objectViewer)
+  members = ["serviceAccount:SVC@example.com"]    
+
+  # Add more bindings for additional roles as needed
+}
+
+resource "google_storage_bucket_iam_binding" "my_bucket_creator" {
+  bucket = google_storage_bucket.my_bucket.name
+
+  role    = "roles/storage.objectCreator"  # Another role you want to grant
+  members = ["serviceAccount:SVC@example.com"]   
+
+}
+
+# NOTE: In members "Specify the existing service account email"
+# members = ["user:example@gmail.com"] ; members = ["allUsers"] ; members = ["serviceAccount:SVC@example.com"]
