@@ -1,0 +1,26 @@
+To delete objects in a bucket for every 7 days:
+
+vim lifecycle.json
+
+{
+  "lifecycle": {
+    "rule": [
+      {
+        "action": {"type": "Delete"},
+        "condition": {
+          "age": 7,
+          "isLive": true
+        }
+      }
+    ]
+  }
+}
+
+*To set lifecycle to a bucket:
+gsutil lifecycle set lifecycle.json gs://your_bucket_name
+
+*To get the lifecycle retention of a bucket:
+gsutil lifecycle get gs://your_bucket_name
+
+*To remove lifecycle rule:
+gsutil lifecycle remove gs://your_bucket_name
