@@ -1,0 +1,45 @@
+To take backup for every 7 days:
+
+vim backup.sh
+
+#!/bin/bash
+
+# Set variables
+SOURCE_BUCKET="gs://your_source_bucket"
+BACKUP_BUCKET="gs://your_backup_bucket"
+DATE_FORMAT="%Y%m%d"
+BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
+
+# Copy objects from source bucket to backup bucket
+gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
+
+
+* Give permissions to .sh file:
+chmod +x backup.sh
+
+*Opening the crontab file:
+crontab -e
+
+*Adding schedule:
+0 0 */7 * * /path/to/backup.sh
+(
+#!/bin/bash
+
+# Set variables
+SOURCE_BUCKET="gs://adq-bucket-dev-getteam"
+BACKUP_BUCKET="gs://adq-bucket-backup-getteam"
+DATE_FORMAT="%Y%m%d"
+BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
+
+# Copy objects from source bucket to backup bucket
+gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
+                                                                      )
+---------------------------------------------------------------------------------------------
+* * * * *
+Minute (0-59)
+Hour (0-23)
+Day of the month (1-31)
+Month (1-12 or names: jan, feb, mar, etc.)
+Day of the week (0-7 or names: sun, mon, tue, etc., where 0 and 7 represent Sunday)
+----------------------------------------------------------------------------------------------
+*/5 * * * * means for ever 5 minutes, every hour, every day of month, every month, every day of week.
