@@ -1,3 +1,6 @@
+Object:
+Admin, Creator, User, Viewer
+---------------------------------
 *Storage Object Viewer (roles/storage.objectViewer):
 
 Permissions:
