@@ -1,0 +1,136 @@
+NOTE: This code is under maintainance, dont use it.
+
+We can schedule the backup of your Google Cloud Storage bucket using Terraform by using external tools or services such as Cloud Scheduler or Cloud Functions.
+
+* Create a Cloud Function: Write a Cloud Function that triggers the backup process. This function can use the Cloud Storage client library to perform the backup         operation.
+* Deploy the Cloud Function: Use Terraform to deploy the Cloud Function.
+* Create a Cloud Scheduler Job: Create a Cloud Scheduler job that triggers the Cloud Function at the desired schedule (e.g., every day, every week).
+---------------------------------------
+provider "google" {
+  project = "ringed-hallway-417305"
+  region  = "us-central1"
+}
+
+variable "service_accounts" {
+  type = map(string)
+  default = {
+    "roles/storage.objectAdmin"  = "sumanth@ringed-hallway-417305.iam.gserviceaccount.com"
+    "roles/storage.objectCreator" = "sumanth@ringed-hallway-417305.iam.gserviceaccount.com"
+    # Add more roles and service account email addresses as needed
+  }
+}
+
+
+resource "google_storage_bucket" "source_bucket" {
+  name          = "adq-bucket-source-getteam"
+  location      = "US"
+  force_destroy = true
+
+  versioning {
+    enabled = true
+  }
+}
+
+resource "google_storage_bucket" "destination_bucket" {
+  name          = "adq-bucket-destination-getteam"
+  location      = "US"
+  force_destroy = true
+
+  versioning {
+    enabled = true
+  }
+}
+
+resource "google_storage_bucket_iam_binding" "source" {
+  for_each = var.service_accounts
+  bucket = google_storage_bucket.source_bucket.name
+
+  role    = each.key
+  members = ["serviceAccount:${each.value}"]
+}
+
+resource "google_storage_bucket_iam_binding" "destination" {
+  for_each = var.service_accounts
+  bucket = google_storage_bucket.destination_bucket.name
+
+  role    = each.key
+  members = ["serviceAccount:${each.value}"]
+}
+
+resource "google_cloudfunctions_function" "backup_function" {
+  name                 = "backup-function"
+  runtime              = "nodejs14"
+  source_archive_bucket = google_storage_bucket.source_bucket.name
+  source_archive_object = "/root/terraform/function.zip"
+  entry_point          = "backupFunction"
+  trigger_http         = true
+  available_memory_mb  = 256
+  timeout              = 60  # Timeout duration in seconds
+}
+
+resource "google_cloud_scheduler_job" "backup_scheduler_job" {
+  name     = "backup-scheduler-job"
+  schedule = "*/5 * * * *"
+
+  http_target {
+    uri           = google_cloudfunctions_function.backup_function.https_trigger_url
+    http_method   = "POST"
+    headers       = { "Content-Type" = "application/json" }
+  }
+
+  lifecycle {
+    ignore_changes = [http_target[0].uri]
+  }
+}
+
+	
+need: storge object viewer permission(roles/storage.objectViewer).
+---------------------------------------
+Cloud function code:
+
+To compress a normal file into zip file: zip -r function.zip /path/to/your/function/directory
+----------------
+vim function
+----------------
+const { spawn } = require('child_process');
+
+// Function to execute gsutil command
+function executeGsutilCommand(args) {
+  return new Promise((resolve, reject) => {
+    const gsutil = spawn('gsutil', args);
+
+    gsutil.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    gsutil.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    gsutil.on('close', (code) => {
+      console.log(`gsutil process exited with code ${code}`);
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(`gsutil process exited with code ${code}`);
+      }
+    });
+  });
+}
+
+// Cloud Function entry point
+exports.backupFunction = async (req, res) => {
+  try {
+    // Set source and destination bucket names
+    const sourceBucket = 'adq-bucket-source-getteam';
+    const destinationBucket = 'adq-bucket-destination-getteam';
+
+    // Run gsutil command to copy contents of source bucket to destination bucket
+    await executeGsutilCommand(['cp', '-r', `gs://${sourceBucket}`, `gs://${destinationBucket}/backup`]);
+
+    res.status(200).send('Backup completed successfully');
+  } catch (error) {
+    console.error('Backup failed:', error);
+    res.status(500).send('Backup failed');
+  }
+};
