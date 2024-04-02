@@ -1,0 +1,20 @@
+provider "google" {
+  project     = "ringed-hallway-417305"
+  region      = "us-central1"
+}
+
+resource "google_storage_bucket" "example_bucket" {
+  name     = "example-bucket-name"
+  location = "us-central1"
+}
+
+resource "google_storage_bucket_object" "example_object" {
+  name   = "example-file.txt"
+  bucket = google_storage_bucket.example_bucket.name
+  source = "/root/terraform/*"
+  acl    = "public-read"
+}
+
+------------------------------
+NOTE:
+use the "google_storage_bucket_object" resource from this code and use it accordingly.
