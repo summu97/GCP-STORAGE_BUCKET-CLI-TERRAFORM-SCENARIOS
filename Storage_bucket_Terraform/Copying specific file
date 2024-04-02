@@ -1,0 +1,23 @@
+-----------------------------
+This copies the content of source file in local and creates a file in bucket and pastes the content there:
+-----------------------------
+provider "google" {
+  project = "xenon-timer-414316"
+  region  = "us-central1"
+}
+ 
+resource "google_storage_bucket" "example_bucket" {
+  name     = "adq-bucket-dev-getteam"
+  location = "us-central1"
+}
+ 
+resource "google_storage_bucket_object" "example_object" {
+  name   = "example-dev-dev.txt"
+  bucket = google_storage_bucket.example_bucket.name
+  source = "/root/main.tf"
+  # Provide the content of the file as a string
+}
+
+------------------------------
+NOTE:
+use the "google_storage_bucket_object" resource from this code and use it accordingly.
