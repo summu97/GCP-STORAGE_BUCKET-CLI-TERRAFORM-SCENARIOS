@@ -2,9 +2,9 @@ In this case, three rules are defined:
 Objects older than 30 days are transitioned to the Nearline storage class.
 Objects older than 90 days are transitioned to the Coldline storage class.
 Objects older than 180 days are transitioned to the Archive storage class.
-
+--------------------------------------------------------------------------
 vim lifecycle.json (copy paste code in this file)
--------------------------
+--------------------------------------------------------------------------
 {
   "lifecycle": {
     "rule": [
