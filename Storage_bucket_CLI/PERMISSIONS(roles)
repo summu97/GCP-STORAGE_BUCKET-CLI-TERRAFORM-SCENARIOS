@@ -19,17 +19,10 @@ Permissions:
 storage.objects.*: Grants full control over objects within a bucket.
 This role includes permissions for viewing, listing, creating, deleting, and updating objects.
 -----------------------------------------------------------------------------------------------
-*Storage Bucket Viewer (roles/storage.bucketViewer):
-
-Permissions:
-storage.buckets.get: Allows users to view bucket metadata.
-storage.objects.list: Allows users to list objects within a bucket.
+*Storage Object User (roles/storage.objectUser):
 -----------------------------------------------------------------------------------------------
-*Storage Bucket Creator (roles/storage.bucketCreator):
 
-Permissions:
-storage.buckets.create: Allows users to create buckets.
-storage.buckets.get: Allows users to view bucket metadata.
+                                         "O-----W-----R"
 -----------------------------------------------------------------------------------------------
 *Storage Bucket Admin (roles/storage.bucketAdmin):
 
@@ -38,26 +31,5 @@ All permissions granted by the Storage Bucket Viewer role.
 All permissions granted by the Storage Bucket Creator role.
 storage.buckets.delete: Allows users to delete buckets.
 -----------------------------------------------------------------------------------------------
-                                                "O-----W-----R"
 
-OWNER: Storage Legacy Bucket Owner (roles/storage.legacyBucketOwner):
 
-Permissions:
-storage.buckets.get: Allows users to get bucket metadata.
-storage.objects.*: Grants full control over objects within the bucket.
-Note: This role is deprecated and should be replaced with equivalent IAM roles.
------------------------------------------------------------------------------------------------
-READER: Storage Legacy Bucket Reader (roles/storage.legacyBucketReader):
-
-Permissions:
-storage.objects.get: Allows users to view objects (download/read).
-storage.objects.list: Allows users to list objects within the bucket.
-Note: This role is deprecated and should be replaced with equivalent IAM roles.
------------------------------------------------------------------------------------------------
-WRITER: Storage Legacy Bucket Writer (roles/storage.legacyBucketWriter):
-
-Permissions:
-storage.objects.create: Allows users to upload/create objects in the bucket.
-storage.objects.delete: Allows users to delete objects from the bucket.
-Note: This role is deprecated and should be replaced with equivalent IAM roles.
------------------------------------------------------------------------------------------------
