@@ -1,0 +1,17 @@
+* Create new main.tf file with empty blocks for your resource and run the command as follows:
+---------
+provider "google" {
+  project = "ringed-hallway-417305"
+  region  = "YOUR_INSTANCE_ZONE"
+  zone    = "YOUR_INSTANCE_ZONE"
+}
+
+resource "google_compute_instance" "import" {
+  # Add other configuration for your instance...
+}
+----------
+To Add resource to state file list:
+terraform import google_compute_instance.import INSTANCE_NAME
+
+To remove resource from statefile list:
+terraform state rm google_compute_instance.import
