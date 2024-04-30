@@ -1,0 +1,8 @@
+To mark as tainted:
+terraform taint RESOURCE-NAME (As of in terraform state list)
+
+To recreate resource:
+terraform apply --auto-approve
+
+To undo the tainting action:
+terraform untaint RESOURCE-NAME
