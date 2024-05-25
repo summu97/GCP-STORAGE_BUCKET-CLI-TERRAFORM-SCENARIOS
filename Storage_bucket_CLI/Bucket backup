@@ -1,12 +1,12 @@
 STEP1: gcloud auth login
 
 STEP2: 
-Create two buckets:
+* Create two buckets:
 gsutil mb gs://sumo-source-bucket
 gsutil mb gs://sumo-destination-bucket
 
 STEP3:
-Setting up backup.sh file:
+* Setting up backup.sh file:
 vim backup.sh
 -----
 #!/bin/bash
@@ -40,21 +40,21 @@ echo "Backup completed: $(date)"
 -----
 
 STEP4:
-Giving executable permissions for backup.sh file:
+* Giving executable permissions for backup.sh file:
 chmod +x backup.sh
 
 STEP5:
-Create backup.log file:
+* Create backup.log file:
 touch backup.log
 
 STEP6:
-Setting crontab:
+* Setting crontab:
 crontab -e
 select-->/bin/nano-->*/2 * * * * /home/suasmame/backup.sh >> /home/suasmame/backup.log 2>&1 (Paste this content in crontab)
 		     [Above cron syntax will take backup for every 2 minutes]	
 
 STEP7:
-Confirming crontab setting:
+* Confirming crontab setting:
 crontab -l (this will show the content inside crontab)
 
 STEP8:
