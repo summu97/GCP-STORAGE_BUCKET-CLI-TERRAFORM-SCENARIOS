@@ -1,0 +1,8 @@
+gsutil -m rsync -r gs://your_source_bucket gs://your_backup_bucket >> /path/to/backup.log 2>&1
+
+Setting Up the Cron Job:
+crontab -e
+0 2 * * * gsutil -m rsync -r gs://your_source_bucket gs://your_backup_bucket >> /path/to/backup.log 2>&1
+*  Ensure Environment Variables are Available
+If gsutil requires specific environment variables (like GOOGLE_APPLICATION_CREDENTIALS), you need to set them up in your cron job. Here's how you can do it within the crontab:
+0 2 * * * export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json" && gsutil -m rsync -r gs://your_source_bucket gs://your_backup_bucket >> /path/to/backup.log 2>&1
