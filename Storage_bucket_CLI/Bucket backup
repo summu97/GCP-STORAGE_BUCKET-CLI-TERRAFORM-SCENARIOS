@@ -1,7 +1,14 @@
-To take backup for every 7 days:
+STEP1: gcloud auth login
 
-vim backup.sh ( copy paste below content in file).
---------------------------------
+STEP2: 
+Create two buckets:
+gsutil mb gs://sumo-source-bucket
+gsutil mb gs://sumo-destination-bucket
+
+STEP3:
+Setting up backup.sh file:
+vim backup.sh
+-----
 #!/bin/bash
 
 # Set variables
@@ -11,34 +18,47 @@ DATE_FORMAT="%Y%m%d"
 BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
 
 # Copy objects from source bucket to backup bucket
-gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
----------------------------------
-
-* Give permissions to .sh file:
-chmod +x backup.sh
-
-*Opening the crontab file:
-crontab -e
-
-*Adding schedule:
-0 0 */7 * * /path/to/backup.sh
---------------------------------------------------------------------------------------------
-EXAMPLE:
-
+echo "Starting backup: $(date)"
+gsutil -m cp -r "${SOURCE_BUCKET}/*" "${BACKUP_BUCKET}/${BACKUP_DIR}"
+echo "Backup completed: $(date)"
+=====
+EX:
 #!/bin/bash
 
 # Set variables
-SOURCE_BUCKET="gs://adq-bucket-dev-getteam"
-BACKUP_BUCKET="gs://adq-bucket-backup-getteam"
+SOURCE_BUCKET="gs://sumo-source-bucket"
+BACKUP_BUCKET="gs://sumo-destination-bucket"
 DATE_FORMAT="%Y%m%d"
 BACKUP_DIR="backup_$(date +${DATE_FORMAT})"
+GSUTIL_PATH="/snap/bin/gsutil"
 
 # Copy objects from source bucket to backup bucket
-gsutil -m cp -r "${SOURCE_BUCKET}" "${BACKUP_BUCKET}/${BACKUP_DIR}"
+echo "Starting backup: $(date)"
+$GSUTIL_PATH -m cp -r "${SOURCE_BUCKET}/*" "${BACKUP_BUCKET}/${BACKUP_DIR}"
+echo "Backup completed: $(date)"
+=====
+-----
 
+STEP4:
+Giving executable permissions for backup.sh file:
 chmod +x backup.sh
+
+STEP5:
+Create backup.log file:
+touch backup.log
+
+STEP6:
+Setting crontab:
 crontab -e
-0 0 */7 * * /root/terraform/backup.sh
+select-->/bin/nano-->*/2 * * * * /home/suasmame/backup.sh >> /home/suasmame/backup.log 2>&1 (Paste this content in crontab)
+		     [Above cron syntax will take backup for every 2 minutes]	
+
+STEP7:
+Confirming crontab setting:
+crontab -l (this will show the content inside crontab)
+
+STEP8:
+Now try uploading files into source file.
 
 ---------------------------------------------------------------------------------------------
 * * * * *
