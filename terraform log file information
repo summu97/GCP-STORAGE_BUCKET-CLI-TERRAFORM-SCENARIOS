@@ -1,0 +1,16 @@
+* All log activities are stored in "/var/log/syslog" or /var/log/messages
+* To Access Terraform Logs:
+* When you run Terraform commands (like terraform apply), Terraform prints logs to the standard output (your terminal).
+terraform apply | tee terraform-apply.log
+
+*  Terraform Detailed Logging:
+* You can enable detailed logging by setting the TF_LOG environment variable. This will provide more verbose output from Terraform, which can be useful for debugging.
+export TF_LOG=DEBUG
+terraform apply
+
+* To redirect these detailed logs to a file:
+export TF_LOG=DEBUG
+terraform apply 2>&1 | tee terraform-debug.log
+
+* To unset it:
+unset TF_LOG
